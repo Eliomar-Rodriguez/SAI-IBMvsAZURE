@@ -2,8 +2,8 @@ var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1'); // fir
 var fs = require('fs');
 // credentials provided by your service in https://console.bluemix.net/dashboard/apps/
 var textToSpeech = new TextToSpeechV1({
-  username: '015d2da1-fb94-4b89-86ec-c5213ba225dd',
-  password: '7GEhOLhAH4zu',
+  username: '2bde827f-9cc5-4f46-ab90-e195b44684a9',
+  password: '1zssWAww85eo',
   url: 'https://stream.watsonplatform.net/text-to-speech/api/'
 });
 var VoiceTestIBM = function (voice, text) {
