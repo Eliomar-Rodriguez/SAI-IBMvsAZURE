@@ -5,7 +5,7 @@ var generateAudio = function () {
     if (sentence.length > 0) {
         $.ajax({
             method: "POST",
-            url: "./api/visitors",
+            url: "./generateAudio",
             contentType: "application/json",
             data: JSON.stringify({
                 sentence: sentence,
@@ -13,7 +13,8 @@ var generateAudio = function () {
             })
         })
         .done(function(data) {
-            console.log(data)
+            if(data.success)
+                document.getElementById('alerts').style.display = 'inline'                
         });
     }
 }

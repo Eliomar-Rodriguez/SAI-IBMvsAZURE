@@ -17,12 +17,15 @@
     <script src="function.js"></script>
 </head>
 
-<body>
+<body >
+   
+    <div style="padding-left: 12.60%;">
+        <h3>Welcome</h3>   
+        <p class="lead" style="font-size: 18px">Write something that you want to listen.</p>
+    </div>
+    
     <div class="container" id="container">
-        <h1 >Welcome</h1>   
-        <p class="lead">Write something that you want to listen.</p>
-        
-        <div id="nameInput" class="input-group-lg helloInput">            
+        <div id="nameInput" class="input-group-lg">            
             <textarea id="sentence" placeholder="Sentence" style="resize: both; overflow: auto;width: 330px;height: 100%;" type="text" class="form-control"s></textarea>
         </div>
         <br>
@@ -37,11 +40,68 @@
         <div>
             <button class="btn btn-success" onclick="generateAudio()">Generate</button>
         </div>
+        <br>
+        <div id="alerts" style="display: none;">
+            <div  class="alert alert-success" role="alert">
+                Success audio generation!
+            </div>
+        </div>       
+        
+        <div class="alert alert-info">
+            <strong>¡Important data about IBM options!</strong>
+            <li><u>SimpleText</u></li>
+            You can generate an audio from a simple text, without any structure.
+            <li><u>Expressive SSML</u></li>
+            You can generate an audio, but the text that you insert must to have a specific structure
+        </div>
+               
         <!--<audio controls>
             <source src="" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>-->
     </div>
+    <div id='container'></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>
+    <script>
+      const apiKey = '12140d6367c04f64984a42e7c17a022a' 
+      
+      async function synth(key, text, lang, gender, voice){
+        const urlAuth = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+        const auth = await axios.post(urlAuth, {}, {
+          headers:{
+            'Ocp-Apim-Subscription-Key': key
+          }
+        })
+        const urlAudio = 'https://speech.platform.bing.com/synthesize'
+        const xml = `
+        <speak version='1.0' xml:lang='${lang}'>
+            <voice xml:lang='${lang}' xml:gender='${gender}' name='Microsoft Server Speech Text to Speech Voice (${voice})'>"
+            ${text}</voice></speak>
+        `
+        const audioData = await axios.post(urlAudio, xml, {
+          responseType: 'blob',
+          headers:{
+            Authorization: 'Bearer '+auth.data,
+            'Content-Type': 'application/ssml+xml',
+            'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3'
+          }
+        })
+        const reader = new FileReader()
+        reader.onload = () => {
+          const container = document.getElementById('container')
+          const audioTag = document.createElement('audio')
+          audioTag.src = reader.result
+          audioTag.autoplay = true
+          audioTag.controls = true
+          container.appendChild(audioTag)
+        }
+        reader.readAsDataURL(audioData.data)
+        console.log(audioData)
+        
+      }
+      synth(apiKey, 'Hello, how are you?','en-US','Male','en-US, BenjaminRUS')
+      
+    </script>
 </body>
 
 </html>

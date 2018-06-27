@@ -4,16 +4,5 @@ html {
 }
 body {
   margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  background-color: #f5f7fa;
-}
-.helloInput {
-  width: 300px;
+  background: linear-gradient(141deg, #00FFFF 10%, #1fc8db 30%, #2cb5e8 75%);
 }

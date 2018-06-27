@@ -17,11 +17,14 @@
   "dependencies": {
     "body-parser": "^1.17.x",
     "cfenv": "^1.0.x",
-    "cloudant": "1.9.x",
+    "cloudant": "^1.10.0",
     "dotenv": "^4.0.0",
     "express": "^4.15.x",
     "hotnode": "0.0.8",
-    "watson-developer-cloud": "^3.5.0"
+    "s": "^0.1.1",
+    "watson-developer-cloud": "^3.5.0",
+    "wav": "^1.0.2",
+    "xmlbuilder": "^10.0.0"
   },
   "author": "IBM Corp",
   "license": "Apache-2.0"
