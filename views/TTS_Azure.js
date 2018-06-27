@@ -1,71 +1,39 @@
-/*var request = require('request'),
-    xmlbuilder = require('xmlbuilder'),
-    wav = require('wav');//,
-    Speaker = require('speaker');
-
-exports.Synthesize = function Synthesize(){
-
-    // Note: new unified SpeechService API key and issue token uri is per region
-    // New unified SpeechService key
-    // Free: https://azure.microsoft.com/en-us/try/cognitive-services/?api=speech-services
-    // Paid: https://go.microsoft.com/fwlink/?LinkId=872236
-    var apiKey = "a08906d5152a46869d2c43148ded968a";
-    var ssml_doc = xmlbuilder.create('speak')
-        .att('version', '1.0')
-        .att('xml:lang', 'en-us')
-        .ele('voice')
-        .att('xml:lang', 'en-us')
-        .att('xml:gender', 'Male')
-        .att('name', 'Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)')
-        .txt('This is a demo to call Microsoft text to speech service.')
-        .end();
-    var post_speak_data = ssml_doc.toString();
-
-    request.post({
-        url: 'https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken',
-        headers: {
-            'Ocp-Apim-Subscription-Key' : apiKey
+/*const apiKey = '12140d6367c04f64984a42e7c17a022a' 
+      //var voice = document.getElementById('sentence').value;
+      async function synth(key, text, lang, gender, voice){
+        const urlAuth = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+        const auth = await axios.post(urlAuth, {}, {
+          headers:{
+            'Ocp-Apim-Subscription-Key': key
+          }
+        })
+        const urlAudio = 'https://speech.platform.bing.com/synthesize'
+        const xml = `
+        <speak version='1.0' xml:lang='${lang}'>
+            <voice xml:lang='${lang}' xml:gender='${gender}' name='Microsoft Server Speech Text to Speech Voice (${voice})'>"
+            ${text}</voice></speak>
+        `
+        const audioData = await axios.post(urlAudio, xml, {
+          responseType: 'blob',
+          headers:{
+            Authorization: 'Bearer '+auth.data,
+            'Content-Type': 'application/ssml+xml',
+            'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3'
+          }
+        })
+        const reader = new FileReader()
+        reader.onload = () => {
+          const container = document.getElementById('container')
+          const audioTag = document.createElement('audio')
+          audioTag.src = reader.result
+          audioTag.autoplay = true
+          audioTag.controls = true
+          container.appendChild(audioTag)
         }
-    }, function (err, resp, access_token) {
-        if (err || resp.statusCode != 200) {
-            console.log(err, resp.body);
-        } else {
-            try {
-                request.post({
-                    url: 'https://westus.tts.speech.microsoft.com/cognitiveservices/v1',
-                    body: post_speak_data,
-                    headers: {
-                        'content-type' : 'application/ssml+xml',
-                        'X-Microsoft-OutputFormat' : 'riff-24khz-16bit-mono-pcm',
-                        'Authorization': 'Bearer ' + access_token,
-                        'X-Search-AppId': '07D3234E49CE426DAA29772419F436CA',
-                        'X-Search-ClientID': '1ECFAE91408841A480F00935DC390960',
-                        'User-Agent': 'TTSNodeJS'
-                    },
-                    encoding: null
-                }, function (err, resp, speak_data) {
-                    if (err || resp.statusCode != 200) {
-                        console.log(err, resp.body);
-                    } else {
-                        try {
-                            var reader = new wav.Reader();
-                            reader.on('format', function (format) {
-                                console.log(format)
-                                reader.pipe(new Speaker(format));
-                            });
-                            var Readable = require('stream').Readable;
-                            var s = new Readable;
-                            s.push(speak_data);
-                            s.push(null);
-                            s.pipe(reader);
-                        } catch (e) {
-                            console.log(e.message);
-                        }
-                    }
-                });
-            } catch (e) {
-                console.log(e.message);
-            }
-        }
-    });
-};*/
+        reader.readAsDataURL(audioData.data)
+        console.log(audioData)
+        
+      }
+      
+      synth(apiKey, 'Hello, how are you?','en-US','Male','en-US, BenjaminRUS')*/
+      

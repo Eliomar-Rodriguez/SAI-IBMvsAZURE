@@ -1,7 +1,5 @@
 var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1'); // first install this dependence with npm i watson-developer-cloud --s
 var fs = require('fs');
-var speechToText = require('../STT_IBM')
-var TTS_Azure = require('./TTS_Azure')
 // credentials provided by your service in https://console.bluemix.net/dashboard/apps/
 var textToSpeech = new TextToSpeechV1({
     username: '2bde827f-9cc5-4f46-ab90-e195b44684a9',
@@ -30,9 +28,8 @@ exports.VoiceTestIBM = function (voice, text, callback) {
             textToSpeech.repairWavHeader(audio);
             fs.writeFileSync('generatedAudio.wav', audio);//output name of the file           
             
-            speechToText.textTestIBM(); 
+            //speechToText.textTestIBM(); 
             console.log('Audio generated!');
-            TTS_Azure.Synthesize();
             callback({
                 success: true
             })           

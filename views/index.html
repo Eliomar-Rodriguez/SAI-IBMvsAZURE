@@ -19,88 +19,134 @@
 
 <body >
    
-    <div style="padding-left: 12.60%;">
+    <div style="padding-left: 5%;">
         <h3>Welcome</h3>   
         <p class="lead" style="font-size: 18px">Write something that you want to listen.</p>
     </div>
     
     <div class="container" id="container">
         <div id="nameInput" class="input-group-lg">            
-            <textarea id="sentence" placeholder="Sentence" style="resize: both; overflow: auto;width: 330px;height: 100%;" type="text" class="form-control"s></textarea>
+            <textarea id="sentence" placeholder="Sentence" style="resize: both; overflow: auto;width: 500px;height: 100%;" type="text" class="form-control"s></textarea>
         </div>
         <br>
-        <select id="selectedVoice" class="form-control" style="width: 330px;">
+        <select id="selectedVoice" class="form-control" style="width: 500px;">
+            <!--IBM-->
             <option value="en-US_MichaelVoice">Michael (US) SimpleText IBM</option>
             <option value="en-US_AllisonVoice">Allison (US) SimpleText or Expressive SSML IBM</option>
             <option value="en-GB_KateVoice">Kate (UK) SimpleText IBM</option>
             <option value="en-US_LisaVoice">Lisa (US) SimpleText IBM</option>
-            <!--<option value="en-US_LisaVoice">Lisa (US) SimpleText IBM</option>-->
+            <!--Azure-->
+            <option value="en-US, BenjaminRUS">Benjamin (US) Azure</option>
+            <option value="en-US, Guy24kRUS">Guy24k (US) Azure</option>
+            <option value="en-US, ZiraRUS">Zira (US) Azure</option>
+            <option value="en-US, JessaRUS">Jessa (US) Azure</option>
+            <option value="en-US, Jessa24kRUS">Jessa24k (US) Azure</option>
+
+            <option value="en-GB, George, Apollo">George, Apollo (UK) Azure</option>
+            <option value="en-GB, Susan, Apollo">Susan, Apollo (UK) Azure</option>
+            <option value="en-GB, HazelRUS">Jessa24k (UK) Azure</option>
         </select>
         <br>
         <div>
-            <button class="btn btn-success" onclick="generateAudio()">Generate</button>
+            <button id="generateAudio" class="btn btn-success">Generate</button>
         </div>
         <br>
+        <div id="error" style="display: none;">
+            <div class="alert alert-danger" role="alert" style="max-width: 500px;">
+                Sentence is empty!
+            </div>
+        </div>
+
+        
         <div id="alerts" style="display: none;">
-            <div  class="alert alert-success" role="alert">
+            <div  class="alert alert-success" role="alert"  style="max-width: 500px;">
                 Success audio generation!
             </div>
         </div>       
         
-        <div class="alert alert-info">
+        <div class="alert alert-info"  style="max-width: 500px;">
             <strong>¡Important data about IBM options!</strong>
             <li><u>SimpleText</u></li>
             You can generate an audio from a simple text, without any structure.
             <li><u>Expressive SSML</u></li>
             You can generate an audio, but the text that you insert must to have a specific structure
         </div>
-               
+
+        <div id="container1"></div>
         <!--<audio controls>
             <source src="" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>-->
     </div>
-    <div id='container'></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>
     <script>
-      const apiKey = '12140d6367c04f64984a42e7c17a022a' 
+        const apiKey = '12140d6367c04f64984a42e7c17a022a' 
       
-      async function synth(key, text, lang, gender, voice){
-        const urlAuth = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
-        const auth = await axios.post(urlAuth, {}, {
-          headers:{
-            'Ocp-Apim-Subscription-Key': key
-          }
-        })
-        const urlAudio = 'https://speech.platform.bing.com/synthesize'
-        const xml = `
-        <speak version='1.0' xml:lang='${lang}'>
-            <voice xml:lang='${lang}' xml:gender='${gender}' name='Microsoft Server Speech Text to Speech Voice (${voice})'>"
-            ${text}</voice></speak>
-        `
-        const audioData = await axios.post(urlAudio, xml, {
-          responseType: 'blob',
-          headers:{
-            Authorization: 'Bearer '+auth.data,
-            'Content-Type': 'application/ssml+xml',
-            'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3'
-          }
-        })
-        const reader = new FileReader()
-        reader.onload = () => {
-          const container = document.getElementById('container')
-          const audioTag = document.createElement('audio')
-          audioTag.src = reader.result
-          audioTag.autoplay = true
-          audioTag.controls = true
-          container.appendChild(audioTag)
+        async function synth(key, text, lang, gender, voice){
+            const urlAuth = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+            const auth = await axios.post(urlAuth, {}, {
+            headers:{
+                'Ocp-Apim-Subscription-Key': key
+            }
+            })
+            const urlAudio = 'https://speech.platform.bing.com/synthesize'
+            const xml = `
+            <speak version='1.0' xml:lang='${lang}'>
+                <voice xml:lang='${lang}' xml:gender='${gender}' name='Microsoft Server Speech Text to Speech Voice (${voice})'>"
+                ${text}</voice></speak>`
+            
+            const audioData = await axios.post(urlAudio, xml, {
+                responseType: 'blob',
+                headers:{
+                    Authorization: 'Bearer '+auth.data,
+                    'Content-Type': 'application/ssml+xml',
+                    'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3'
+                }
+            })
+            const reader = new FileReader()
+            reader.onload = () => {
+                var flag = 0;
+                const container = document.getElementById('container1');
+                var audioTag = audioTag = document.createElement('audio');
+
+                /*if(document.getElementById('container1').firstChild != null)
+                    document.getElementById("container1").removeChild('audio');
+                
+
+                var elemento = document.getElementById("container1");
+                while (element.firstChild) {
+                element.removeChild(element.firstChild);
+                }*/
+                audioTag.src = reader.result
+                audioTag.autoplay = true
+                audioTag.controls = true
+                container.appendChild(audioTag)
+            }
+            reader.readAsDataURL(audioData.data)
         }
-        reader.readAsDataURL(audioData.data)
-        console.log(audioData)
-        
-      }
-      synth(apiKey, 'Hello, how are you?','en-US','Male','en-US, BenjaminRUS')
       
+        var audioAzure = function(){
+            document.getElementById('error').style.display = 'none'
+            document.getElementById('alerts').style.display = 'none'
+            var sentence = document.getElementById('sentence').value;
+            var voice = $('#selectedVoice').val();
+            if (sentence.length > 0) {
+                if(voice == 'en-US, BenjaminRUS' | voice == 'en-US, Guy24kRUS')//male US
+                    synth(apiKey, sentence,'en-US','Male',voice)
+                else if(voice == 'en-US, ZiraRUS' | voice == 'en-US, JessaRUS' | voice == 'en-US, Jessa24kRUS')//female US
+                    synth(apiKey, sentence,'en-US','Female',voice)
+                else if(voice == 'en-GB, George, Apollo') // male UK
+                    synth(apiKey, sentence,'en-GB','Male',voice)
+                else if(voice == 'en-GB, Susan, Apollo' | voice == 'en-GB, HazelRUS') // female UK
+                    synth(apiKey, sentence,'en-GB','Female',voice)
+                else
+                    generateAudio();
+            }
+            else{
+                document.getElementById('error').style.display = 'inline'
+            }
+        }
+        document.getElementById('generateAudio').addEventListener("click", audioAzure, false);      
     </script>
 </body>
 
