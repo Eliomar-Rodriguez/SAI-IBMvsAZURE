@@ -6,3 +6,11 @@ body {
   margin-bottom: 60px;
   background: linear-gradient(141deg, #00FFFF 10%, #1fc8db 30%, #2cb5e8 75%);
 }
+#nav{
+  background-color: rgba(91, 170, 248, 0.639);
+  border-color: #2cb5e8
+}
+#title{
+  padding-left: 5%;
+  background: linear-gradient(to bottom right, #00FFFF -30%,  azure 10%, #46c0ec55 70%);
+}

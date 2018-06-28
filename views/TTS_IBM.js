@@ -26,9 +26,9 @@ exports.VoiceTestIBM = function (voice, text, callback) {
                 return;
             }
             textToSpeech.repairWavHeader(audio);
+            
             fs.writeFileSync('generatedAudio.wav', audio);//output name of the file           
             
-            //speechToText.textTestIBM(); 
             console.log('Audio generated!');
             callback({
                 success: true
